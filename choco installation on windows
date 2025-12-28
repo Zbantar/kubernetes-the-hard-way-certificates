@@ -1,0 +1,91 @@
+Option 1 (Best if you have Admin): Repair Chocolatey properly
+1) Open PowerShell as Administrator
+
+Start menu → type PowerShell → right-click → Run as administrator
+
+2) Repair by removing the broken Chocolatey folder
+
+Run:
+
+Remove-Item -Recurse -Force C:\ProgramData\chocolatey
+
+
+This removes the broken install only. (You don’t have choco packages installed anyway if choco.exe is missing.)
+
+3) Reinstall Chocolatey
+
+Run:
+
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+4) Verify
+choco -v
+
+5) Install Git + VirtualBox + Vagrant
+choco install git -y
+choco install virtualbox -y
+choco install vagrant -y
+
+
+Reboot if prompted (VirtualBox often requires it).
+
+Option 2 (No Admin needed): Install everything manually (skip Chocolatey)
+
+This is often the fastest on locked-down PCs.
+
+Step A — Install Git
+
+Download Git for Windows (64-bit)
+
+Install with defaults
+
+Verify:
+
+git --version
+
+Step B — Install VirtualBox (or Hyper-V)
+
+If you’re on Windows Home → use VirtualBox
+
+If you’re on Windows Pro → Hyper-V is possible, but VirtualBox is simplest
+
+Verify (VirtualBox):
+
+VBoxManage --version
+
+Step C — Install Vagrant
+
+Download Vagrant MSI for Windows (64-bit)
+
+Install
+
+Verify:
+
+vagrant --version
+
+Step D — Test Vagrant
+mkdir $HOME\vagrant-test
+cd $HOME\vagrant-test
+vagrant init hashicorp/bionic64
+vagrant up
+
+Which option should you do?
+
+If you can run PowerShell as Administrator → do Option 1
+
+If you cannot (work/school computer, no admin) → do Option 2
+
+Quick check (tell me the result)
+
+Run this:
+
+net session
+
+
+If it says Access is denied → you’re not admin → Option 2
+
+If it returns session info (or a different output without access denied) → you’re admin → Option 1
+
+If you paste the net session output, I’ll tell you exactly which path to follow next.
