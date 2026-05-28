@@ -11,9 +11,134 @@ aws eks update-kubeconfig \
   --region us-east-1 \
   --name prod-eks
 
+
 This command:
 
 Downloads cluster endpoint
 Downloads cluster certificate
 Updates ~/.kube/config
 Configures IAM authentication
+
+
+aws sts get-caller-identity
+
+
+aws sts get-caller-identity
+
+Assume the role:
+
+aws sts assume-role \
+  --role-arn arn:aws:iam::<account-id>:role/<role-name> \
+  --role-session-name eks-admin-session
+
+It returns temporary credentials. Export them:
+
+export AWS_ACCESS_KEY_ID=<AccessKeyId>
+export AWS_SECRET_ACCESS_KEY=<SecretAccessKey>
+export AWS_SESSION_TOKEN=<SessionToken>
+
+aws sts get-caller-identity
+
+Then connect:
+
+aws eks update-kubeconfig --region us-east-1 --name <cluster-name>
+
+Test:
+
+kubectl get nodes
+
+ssh -i <key.pem> ec2-user@<bastion-public-ip>
+
+or:
+
+ssh -i <key.pem> ubuntu@<bastion-public-ip>
+
+Then check if AWS CLI is already authenticated:
+
+aws sts get-caller-identity
+
+List clusters:
+
+aws eks list-clusters --region us-east-1
+
+Connect:
+
+aws eks update-kubeconfig --region us-east-1 --name <cluster-name>
+
+Test:
+
+kubectl get nodes
+kubectl get pods -A
+
+If aws sts get-caller-identity fails, the bastion may not have AWS credentials or an IAM instance profile attached.
+
+4. If they give you a preconfigured admin machine
+
+Usually everything is already installed.
+
+Check tools:
+
+aws --version
+kubectl version --client
+
+Check identity:
+
+aws sts get-caller-identity
+
+Check current kubeconfig:
+
+kubectl config get-contexts
+kubectl config current-context
+
+Try:
+
+kubectl get nodes
+
+If not connected yet:
+
+aws eks update-kubeconfig --region us-east-1 --name <cluster-name>
+kubectl get nodes
+Important interview line
+
+Say this clearly:
+
+For EKS, I do not SSH into the control plane. I authenticate with AWS IAM, update my kubeconfig using aws eks update-kubeconfig, and then use kubectl to administer the cluster.
+
+For kubeadm/on-prem:
+
+ssh user@controlplane
+export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl get nodes
+
+
+
+SSH into the bastion:
+
+ssh -i <key.pem> ec2-user@<bastion-public-ip>
+
+or:
+
+ssh -i <key.pem> ubuntu@<bastion-public-ip>
+
+Then check if AWS CLI is already authenticated:
+
+aws sts get-caller-identity
+
+List clusters:
+
+aws eks list-clusters --region us-east-1
+
+Connect:
+aws eks update-kubeconfig --region us-east-1 --name <cluster-name>
+
+Test:
+
+kubectl get nodes
+kubectl get pods -A
+
+For EKS, I do not SSH into the control plane. I authenticate with AWS IAM, update my kubeconfig using aws eks update-kubeconfig,
+and then use kubectl to administer the cluster.
+
+ssh user@controlplane
+export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl get nodes
