@@ -1,0 +1,19 @@
+ssh ec2-user@bastion-host
+aws sts get-caller-identity
+aws eks list-clusters
+
+
+Step 3: Configure kubectl access
+
+VERY IMPORTANT COMMAND:
+
+aws eks update-kubeconfig \
+  --region us-east-1 \
+  --name prod-eks
+
+This command:
+
+Downloads cluster endpoint
+Downloads cluster certificate
+Updates ~/.kube/config
+Configures IAM authentication
