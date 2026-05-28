@@ -142,3 +142,8 @@ and then use kubectl to administer the cluster.
 ssh user@controlplane
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl get nodes
+
+
+
+
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance?utm_source=chatgpt.com
